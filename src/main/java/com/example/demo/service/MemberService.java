@@ -15,12 +15,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.MemberDto;
+import com.example.demo.domain.RoleDto;
 import com.example.demo.service.mapper.MemberMapper;
+import com.example.demo.service.mapper.RoleMapper;
 
 @Service
 public class MemberService implements UserDetailsService {
 	@Autowired
 	private MemberMapper memberMapper;
+	
+	@Autowired
+	private RoleMapper roleMapper;
 	
     @Transactional
     public Long joinUser(MemberDto memberDto) {
@@ -29,8 +34,12 @@ public class MemberService implements UserDetailsService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         System.out.println(memberDto.getUsername());
-        memberDto.setRoll("MEMBER");
         
+        RoleDto roleDto = new RoleDto();
+        roleDto.setUsername(memberDto.getUsername());
+        roleDto.setRole("MEMBER");
+        
+        roleMapper.insertRole(roleDto);
         return memberMapper.insertMember(memberDto);
         //return memberRepository.save(memberDto.toEntity()).getId();
     }

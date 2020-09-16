@@ -11,7 +11,7 @@ public interface MemberMapper {
 	@Select("SELECT * from tb_member WHERE username=#{username}")
 	public MemberDto findOneById(String username);
 	
-	@Insert("INSERT into tb_member (username, password, name, roll) VALUES (#{username}, #{password}, #{name}, #{roll})")
+	@Insert("INSERT into tb_member (username, password, name) VALUES (#{username}, #{password}, #{name})")
 	public Long insertMember(MemberDto memberDto);
 
 }

@@ -1,11 +1,12 @@
 package com.example.demo.domain;
 
 public class MemberDto {
+	
 	private int memberNo;
 	private String username;
 	private String password;
 	private String name;
-	private String roll;
+	private String role;
 	
 	public int getMemberNo() {
 		return memberNo;
@@ -31,12 +32,11 @@ public class MemberDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getRoll() {
-		return roll;
+	public String getRole() {
+		return role;
 	}
-	public void setRoll(String roll) {
-		this.roll = roll;
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
-
 }

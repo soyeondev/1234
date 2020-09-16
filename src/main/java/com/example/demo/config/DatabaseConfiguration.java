@@ -35,8 +35,8 @@ public class DatabaseConfiguration {
    	public DataSource getDataSource() {
    		DriverManagerDataSource dataSource = new DriverManagerDataSource();
    		dataSource.setDriverClassName(className);
- 		dataSource.setUrl("jdbc:mysql://localhost:3308/soyeon?serverTimezone=UTC");
-   		dataSource.setUsername("soyeon");
+ 		dataSource.setUrl("jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC");
+   		dataSource.setUsername("tiger");
    		dataSource.setPassword("1234");
    		return dataSource;
    	}
