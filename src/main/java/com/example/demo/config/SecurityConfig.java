@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.demo.handler.LoginSuccessHandler;
 import com.example.demo.service.MemberService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MemberService memberService;
+    @Autowired private LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/user/login")
                 .defaultSuccessUrl("/user/login/result")
+                .successHandler(loginSuccessHandler)
                 .permitAll()
             .and() // 로그아웃 설정
                 .logout()

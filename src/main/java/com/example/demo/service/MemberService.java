@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.MemberDto;
 import com.example.demo.domain.RoleDto;
+import com.example.demo.domain.UserDto;
 import com.example.demo.service.mapper.MemberMapper;
 import com.example.demo.service.mapper.RoleMapper;
+import com.example.demo.service.mapper.UserMapper;
 
 @Service
 public class MemberService implements UserDetailsService {
@@ -27,20 +29,23 @@ public class MemberService implements UserDetailsService {
 	@Autowired
 	private RoleMapper roleMapper;
 	
+	@Autowired
+	private UserMapper userMapper;
+	
     @Transactional
-    public Long joinUser(MemberDto memberDto) {
+    public Long joinUser(UserDto userDto) {
         // 비밀번호 암호화
     	System.out.println("회원가입 in");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-        System.out.println(memberDto.getUsername());
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        System.out.println(userDto.getUsername());
         
         RoleDto roleDto = new RoleDto();
-        roleDto.setUsername(memberDto.getUsername());
+        roleDto.setUsername(userDto.getUsername());
         roleDto.setRole("MEMBER");
         
-        roleMapper.insertRole(roleDto);
-        return memberMapper.insertMember(memberDto);
+        userMapper.insertUser(userDto);
+        return roleMapper.insertRole(roleDto);
         //return memberRepository.save(memberDto.toEntity()).getId();
     }
 
@@ -48,9 +53,11 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         //Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(userEmail);
     	System.out.println("loadUser in");
-    	MemberDto memberDto = memberMapper.findOneById(userEmail);
-        System.out.println("id: "+userEmail);
-        System.out.println(memberDto.getPassword());
+    	//MemberDto memberDto = memberMapper.findOneById(userEmail);
+    	UserDto userDto = userMapper.findOneById(userEmail);
+        
+    	System.out.println("id: "+userEmail);
+        //System.out.println(memberDto.getPassword());
         
         //MemberEntity userEntity = userEntityWrapper.get();
 
@@ -63,6 +70,6 @@ public class MemberService implements UserDetailsService {
         } else {
         }
 
-        return new User(memberDto.getUsername(), memberDto.getPassword(), authorities);
+        return new User(userDto.getUsername(), userDto.getPassword(), authorities);
     }
 }

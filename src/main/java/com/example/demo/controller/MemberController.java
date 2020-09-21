@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.domain.MemberDto;
+import com.example.demo.domain.UserDto;
 import com.example.demo.service.MemberService;
 
 @Controller
@@ -30,8 +31,8 @@ public class MemberController {
 
 	    // 회원가입 처리
 	    @PostMapping("/user/signup")
-	    public String execSignup(MemberDto memberDto) {
-	        memberService.joinUser(memberDto);
+	    public String execSignup(UserDto userDto) {
+	        memberService.joinUser(userDto);
 	        return "redirect:/";
 	    }
 

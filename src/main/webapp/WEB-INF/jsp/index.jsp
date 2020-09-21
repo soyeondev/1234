@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,5 +13,11 @@
     <hr>
    	<a href="/user/signup">회원가입</a>
    	<a href="/user/login">로그인</a>
+    <%
+    	String id = (String)session.getAttribute("name");
+    	String time = (String)session.getAttribute("time");
+    %>
+
+	<%= id %>님 <%=time %>에 로그인 하셨습니다.
 </body>
 </html>
