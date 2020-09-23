@@ -1,6 +1,10 @@
 package com.example.demo.handler;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,11 +36,34 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		System.out.println("success handler");
+		String macIp = "";
+		InetAddress ip;
+		
+		try {
+			ip = InetAddress.getLocalHost();
+		   
+			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+			byte[] mac = network.getHardwareAddress();
+		   
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+			macIp = sb.toString();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (SocketException e){
+			e.printStackTrace();
+		}
+		
+		String addr = request.getRemoteAddr();
 		
 		UserDto userDto = userMapper.findOneById(authentication.getName());
 		UserLogDto userLogDto = new UserLogDto();
 		userLogDto.setName(userDto.getName());
 		userLogDto.setUsername(userDto.getUsername());
+		userLogDto.setAddress(addr);
+		userLogDto.setMacAddress(macIp);
 		
 		userLogMapper.createLog(userLogDto);
 		
