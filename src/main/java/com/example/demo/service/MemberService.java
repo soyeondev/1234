@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,12 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.domain.MemberDto;
 import com.example.demo.domain.RoleDto;
 import com.example.demo.domain.UserDto;
+import com.example.demo.handler.LoginSuccessHandler;
 import com.example.demo.service.mapper.MemberMapper;
 import com.example.demo.service.mapper.RoleMapper;
 import com.example.demo.service.mapper.UserMapper;
 
 @Service
 public class MemberService implements UserDetailsService {
+
+	protected static Logger LOGGER = Logger.getLogger(MemberService.class.getName());
+
 	@Autowired
 	private MemberMapper memberMapper;
 	
@@ -33,30 +38,27 @@ public class MemberService implements UserDetailsService {
 	private UserMapper userMapper;
 	
     @Transactional
-    public Long joinUser(UserDto userDto) {
+    public Long joinUser(MemberDto memberDto) {
         // 비밀번호 암호화
-    	System.out.println("회원가입 in");
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        System.out.println(userDto.getUsername());
+    	LOGGER.info("joinUser in");
+    	LOGGER.info(memberDto.getUsername());
+
+    	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         
         RoleDto roleDto = new RoleDto();
-        roleDto.setUsername(userDto.getUsername());
+        roleDto.setUsername(memberDto.getUsername());
         roleDto.setRole("MEMBER");
         
-        userMapper.insertUser(userDto);
+        memberMapper.insertMember(memberDto);
         return roleMapper.insertRole(roleDto);
-        //return memberRepository.save(memberDto.toEntity()).getId();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        //Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(userEmail);
-    	System.out.println("loadUser in");
-    	//MemberDto memberDto = memberMapper.findOneById(userEmail);
-    	UserDto userDto = userMapper.findOneById(userEmail);
-        
-    	System.out.println("id: "+userEmail);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    	LOGGER.info("loadUserByUsername in");
+    	
+    	MemberDto memberDto = memberMapper.findOneById(username);
         //System.out.println(memberDto.getPassword());
         
         //MemberEntity userEntity = userEntityWrapper.get();
@@ -65,11 +67,22 @@ public class MemberService implements UserDetailsService {
 
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
-        if (("cat").equals(userEmail)) {
+        if (("cat").equals(username)) {
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
         } else {
         }
 
-        return new User(userDto.getUsername(), userDto.getPassword(), authorities);
+        return new User(memberDto.getUsername(), memberDto.getPassword(), authorities);
     }
+    
+    public List<MemberDto> memberList(){
+    	List<MemberDto> memberList = new ArrayList<MemberDto>();
+    	memberList = memberMapper.memberList();
+    	return memberList;
+    }
+
+    @Transactional
+	public void updateMember(MemberDto memberDto) {
+		memberMapper.memberUpdate(memberDto);
+	}
 }

@@ -5,37 +5,41 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.domain.UserDto;
-import com.example.demo.domain.UserLogDto;
+import com.example.demo.domain.MemberDto;
+import com.example.demo.domain.MemberLogDto;
+import com.example.demo.service.mapper.MemberLogMapper;
+import com.example.demo.service.mapper.MemberMapper;
 import com.example.demo.service.mapper.UserLogMapper;
 import com.example.demo.service.mapper.UserMapper;
 
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-	@Autowired
-	private UserLogMapper userLogMapper;
+	
+	protected static Logger LOGGER = Logger.getLogger(LoginSuccessHandler.class.getName());
 	
 	@Autowired
-	private UserMapper userMapper;
+	private MemberMapper memberMapper;
 	
+	@Autowired
+	private MemberLogMapper memberLogMapper;
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		System.out.println("success handler");
+		LOGGER.info("onAuthenticationSuccess in");
+		
 		String macIp = "";
 		InetAddress ip;
 		
@@ -58,30 +62,23 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		
 		String addr = request.getRemoteAddr();
 		
-		UserDto userDto = userMapper.findOneById(authentication.getName());
-		UserLogDto userLogDto = new UserLogDto();
-		userLogDto.setName(userDto.getName());
-		userLogDto.setUsername(userDto.getUsername());
-		userLogDto.setAddress(addr);
-		userLogDto.setMacAddress(macIp);
+		MemberDto memberDto = memberMapper.findOneById(authentication.getName());
+
+		MemberLogDto memberLogDto = new MemberLogDto();
+		memberLogDto.setName(memberDto.getName());
+		memberLogDto.setUsername(memberDto.getUsername());
+		memberLogDto.setAddress(addr);
+		memberLogDto.setMacAddress(macIp);
 		
-		userLogMapper.createLog(userLogDto);
+		memberLogMapper.createLog(memberLogDto);
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();    
+		String time = memberLogMapper.getLog(memberDto.getUsername());
 		
-//		SimpleDateFormat format = new SimpleDateFormat("HH시 mm분");
-//		Date time = new Date();
-//		String time1 = format.format(time);
-		//String time = userLogMapper.getLog(authentication.getName()).getCreateAt();
-	
-		System.out.println("getUsername():"+userDto.getUsername());
-		String time = userLogMapper.getLog(userDto.getUsername());
-		System.out.println(time.toString());
-		
-		session.setAttribute("name", userDto.getName());
+		session.setAttribute("name", memberDto.getName());
 		session.setAttribute("time", time);
 		
-		response.sendRedirect("/");
+		response.sendRedirect(request.getContextPath()+"/");
 	}
 
 }

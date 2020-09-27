@@ -17,7 +17,9 @@ import com.example.demo.service.MemberService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private MemberService memberService;
+    @Autowired
+	private MemberService memberService;
+    
     @Autowired private LoginSuccessHandler loginSuccessHandler;
 
     @Bean

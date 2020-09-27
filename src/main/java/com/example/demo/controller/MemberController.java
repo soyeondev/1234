@@ -1,7 +1,12 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +36,8 @@ public class MemberController {
 
 	    // 회원가입 처리
 	    @PostMapping("/user/signup")
-	    public String execSignup(UserDto userDto) {
-	        memberService.joinUser(userDto);
+	    public String execSignup(MemberDto memberDto) {
+	        memberService.joinUser(memberDto);
 	        return "redirect:/";
 	    }
 
@@ -70,6 +75,19 @@ public class MemberController {
 	    @GetMapping("/admin")
 	    public String dispAdmin() {
 	        return "admin";
+	    }
+	    
+	    @GetMapping("/member/list")
+	    public String memberList(Model model) {
+	    	List<MemberDto> memberDtos = memberService.memberList();
+	    	model.addAttribute("memberDtos", memberDtos);
+	    	return "member/list";
+	    }
+	    
+	    @PostMapping("/member/update")
+	    public String memberUpdate(MemberDto memberDto){
+	    	memberService.updateMember(memberDto);
+	    	return "member/list";
 	    }
 	    
 	    /*@RequestMapping(value="/user/signup", method=RequestMethod.POST)
