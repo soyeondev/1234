@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.Timestamp;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		memberLogMapper.createLog(memberLogDto);
 		
 		HttpSession session = request.getSession();    
+		//Timestamp time = memberLogMapper.getLog(memberDto.getUsername());
 		String time = memberLogMapper.getLog(memberDto.getUsername());
 		
 		session.setAttribute("name", memberDto.getName());

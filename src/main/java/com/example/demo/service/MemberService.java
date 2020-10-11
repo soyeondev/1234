@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -78,6 +81,31 @@ public class MemberService implements UserDetailsService {
     public List<MemberDto> memberList(){
     	List<MemberDto> memberList = new ArrayList<MemberDto>();
     	memberList = memberMapper.memberList();
+    	
+		/*
+		 * SimpleDateFormat toStrFmt = new SimpleDateFormat("yyyy-MM-dd");
+		 * SimpleDateFormat toDateFmt = new SimpleDateFormat("yyyy-MM-dd"); String
+		 * strCreateAt;
+		 Date dateCreateAt;
+    	
+    	for(int i = 0; i < memberList.size(); i++) {
+    		if(memberList.get(i).getCreateAt() != null) {
+    		try {
+    			strCreateAt = toStrFmt.format(memberList.get(i).getCreateAt());
+    			LOGGER.info(toStrFmt);
+				dateCreateAt = toDateFmt.parse(strCreateAt);
+				memberList.get(i).setCreateAt(dateCreateAt);
+
+    		} catch (ParseException e) {
+				e.printStackTrace();
+			}
+    		
+    	}
+    	}*/
+    	LOGGER.info(memberList.get(5).getCreateAt());
+    	LOGGER.info(memberList.get(4).getCreateAt());
+    	LOGGER.info(memberList.get(5).toString());
+    	
     	return memberList;
     }
 

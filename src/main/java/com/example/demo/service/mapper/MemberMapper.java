@@ -18,7 +18,10 @@ public interface MemberMapper {
 	@Select("SELECT * from member WHERE username=#{username}")
 	public MemberDto findOneById(String username);
 
-	@Select("SELECT * from member")
+	/*@Select("SELECT * from member")
+	public List<MemberDto> memberList();*/
+	
+	@Select("SELECT member_key, username, password, name, phone, department, ext_number, create_at from member")
 	public List<MemberDto> memberList();
 
 	@Update("UPDATE member set name=#{name}, phone=#{phone}, department=#{department}, ext_number=#{extNumber}"

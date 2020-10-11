@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import java.security.Timestamp;
+
 public class MemberLogDto {
 
 	private int memberLogKey;
@@ -7,8 +9,7 @@ public class MemberLogDto {
 	private String name;
 	private String address;
 	private String macAddress;
-	private String createAt;
-	
+	private Timestamp createAt;
 	public int getMemberLogKey() {
 		return memberLogKey;
 	}
@@ -39,15 +40,16 @@ public class MemberLogDto {
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
 	}
-	public String getCreateAt() {
+	public Timestamp getCreateAt() {
 		return createAt;
 	}
-	public void setCreateAt(String createAt) {
+	public void setCreateAt(Timestamp createAt) {
 		this.createAt = createAt;
 	}
 	@Override
 	public String toString() {
 		return "MemberLogDto [memberLogKey=" + memberLogKey + ", username=" + username + ", name=" + name + ", address="
 				+ address + ", macAddress=" + macAddress + ", createAt=" + createAt + "]";
-	}
+	}	
+
 }

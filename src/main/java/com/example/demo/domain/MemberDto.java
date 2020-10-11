@@ -1,5 +1,9 @@
 package com.example.demo.domain;
 
+
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class MemberDto {
 	
 	private int memberKey;
@@ -10,7 +14,7 @@ public class MemberDto {
 	private String department;
 	private String extNumber;
 	private String role;
-	private String createAt;
+	private Timestamp createAt;
 	
 	public int getMemberKey() {
 		return memberKey;
@@ -60,18 +64,19 @@ public class MemberDto {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public String getCreateAt() {
+	public Timestamp getCreateAt() {
 		return createAt;
 	}
-	public void setCreateAt(String createAt) {
+	public void setCreateAt(Timestamp createAt) {
 		this.createAt = createAt;
 	}
-	
 	@Override
 	public String toString() {
 		return "MemberDto [memberKey=" + memberKey + ", username=" + username + ", password=" + password + ", name="
 				+ name + ", phone=" + phone + ", department=" + department + ", extNumber=" + extNumber + ", role="
 				+ role + ", createAt=" + createAt + "]";
 	}
+
+	
 	
 }

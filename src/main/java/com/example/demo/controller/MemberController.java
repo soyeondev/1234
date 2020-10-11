@@ -1,24 +1,24 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.domain.MemberDto;
-import com.example.demo.domain.UserDto;
 import com.example.demo.service.MemberService;
 
 @Controller
 public class MemberController {
+	   private static final Logger LOGGER = Logger.getLogger(MemberController.class);
+	
 	   @Autowired
 	   private MemberService memberService;
 
@@ -80,8 +80,28 @@ public class MemberController {
 	    @GetMapping("/member/list")
 	    public String memberList(Model model) {
 	    	List<MemberDto> memberDtos = memberService.memberList();
-	    	model.addAttribute("memberDtos", memberDtos);
+	    	model.addAttribute("mem\berDtos", memberDtos);
 	    	return "member/list";
+	    }
+	    
+	    @GetMapping("/member/ajax_list")
+	    @ResponseBody
+	    public Map<String, Object> memberAjaxList() {
+	    	LOGGER.info("memberAjaxList in");
+	    	
+	    	List<MemberDto> memberDtos = memberService.memberList();
+	    	LOGGER.info(memberDtos.get(5).getCreateAt());
+	    	
+	    	Map<String, Object> resultMap = new HashMap<String, Object>();
+	    	resultMap.put("memberDtos", memberDtos);
+	    	
+	    	return resultMap; 
+	    }
+
+	    @GetMapping("/member/list_view")
+	    public String memberAjaxListView() {
+
+	    	return "member/list_ajax";
 	    }
 	    
 	    @PostMapping("/member/update")
